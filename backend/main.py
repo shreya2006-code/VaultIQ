@@ -1,15 +1,12 @@
 from fastapi import FastAPI
 
-app = FastAPI(
-    title="VaultIQ API",
-    description="AI-Powered Smart Bookmark Manager",
-    version="1.0.0"
-)
+from backend.database import engine, Base
+from backend import models
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
 
 @app.get("/")
 def home():
-    return {
-        "project": "VaultIQ",
-        "message": "Welcome to VaultIQ",
-        "status": "Backend Running Successfully"
-    }
+    return {"message": "VaultIQ API is running"}
