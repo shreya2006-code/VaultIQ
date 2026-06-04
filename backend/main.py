@@ -73,3 +73,44 @@ def delete_user(
     db.commit()
 
     return {"message": "User deleted successfully"}
+
+@app.post("/links", response_model=schemas.LinkResponse)
+def create_link(
+    link: schemas.LinkCreate,
+    db: Session = Depends(get_db)
+):
+
+    db_link = models.Link(
+        title=link.title,
+        url=link.url,
+        description=link.description,
+        category=link.category
+    )
+
+    db.add(db_link)
+    db.commit()
+    db.refresh(db_link)
+
+    return db_link
+
+@app.get("/links", response_model=list[schemas.LinkResponse])
+def get_links(db: Session = Depends(get_db)):
+
+    links = db.query(models.Link).all()
+
+    return links
+
+@app.delete("/links/{link_id}")
+def delete_link(
+    link_id: int,
+    db: Session = Depends(get_db)
+):
+
+    link = db.query(models.Link).filter(
+        models.Link.id == link_id
+    ).first()
+
+    db.delete(link)
+    db.commit()
+
+    return {"message": "Link deleted successfully"}

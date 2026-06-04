@@ -13,7 +13,24 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        
+
 class UserUpdate(BaseModel):
     username: str
     email: str
+
+class LinkCreate(BaseModel):
+    title: str
+    url: str
+    description: str
+    category: str
+
+
+class LinkResponse(BaseModel):
+    id: int
+    title: str
+    url: str
+    description: str
+    category: str
+
+    class Config:
+        from_attributes = True
