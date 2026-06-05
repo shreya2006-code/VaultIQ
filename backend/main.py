@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from backend.database import engine, Base, get_db
 from backend import models, schemas
 
+from backend.ai_service import summarize_link
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -114,3 +116,12 @@ def delete_link(
     db.commit()
 
     return {"message": "Link deleted successfully"}
+
+@app.post("/ai/summarize")
+def ai_summarize(data: schemas.URLRequest):
+
+    result = summarize_link(data.url)
+
+    return {
+        "result": result
+    }
