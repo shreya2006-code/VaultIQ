@@ -19,10 +19,10 @@ class UserUpdate(BaseModel):
     email: str
 
 class LinkCreate(BaseModel):
-    title: str
     url: str
-    description: str
-    category: str
+    title: str
+    description: str = ""
+    category: str = ""
 
 
 class LinkResponse(BaseModel):

@@ -5,10 +5,19 @@ from backend.database import engine, Base, get_db
 from backend import models, schemas
 
 from backend.ai_service import summarize_link
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def home():
@@ -125,3 +134,42 @@ def ai_summarize(data: schemas.URLRequest):
     return {
         "result": result
     }
+
+@app.post("/links")
+def create_link(
+    link: schemas.LinkCreate,
+    db: Session = Depends(get_db)
+):
+    new_link = models.Link(
+        title=link.title,
+        url=link.url,
+        description=link.description,
+        category=link.category
+    )
+
+    db.add(new_link)
+    db.commit()
+    db.refresh(new_link)
+
+    return new_link
+
+@app.get("/links")
+def get_links(db: Session = Depends(get_db)):
+    return db.query(models.Link).all()
+
+@app.delete("/links/{link_id}")
+def delete_link(
+    link_id: int,
+    db: Session = Depends(get_db)
+):
+    link = db.query(models.Link).filter(
+        models.Link.id == link_id
+    ).first()
+
+    if not link:
+        return {"error": "Link not found"}
+
+    db.delete(link)
+    db.commit()
+
+    return {"message": "Link deleted successfully"}
