@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Register from "./Register";
 
 function App() {
   const [url, setUrl] = useState("");
@@ -51,64 +52,10 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
+    <div>
       <h1>VaultIQ</h1>
-      <p>AI-Powered Bookmark Manager</p>
 
-      <div className="input-section">
-        <input
-          type="text"
-          placeholder="Paste a URL here..."
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-
-        <button onClick={analyzeURL}>
-          Analyze
-        </button>
-      </div>
-
-      <div className="results">
-        <h2>Results</h2>
-
-        {result && (
-          <>
-            <h3>Title</h3>
-            <p>{result.title}</p>
-
-            <h3>AI Analysis</h3>
-            <p>{result.ai_result}</p>
-          </>
-        )}
-      </div>
-
-      <div className="saved-links">
-        <h2>Saved Bookmarks</h2>
-
-        {links.map((link) => (
-          <div key={link.id}>
-            <h3>{link.title}</h3>
-
-            <p>{link.category}</p>
-
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Visit Link
-            </a>
-
-            <button
-              onClick={() => deleteLink(link.id)}
-            >
-            Delete
-            </button>
-
-            <hr />
-          </div>
-        ))}
-      </div>
+      <Register />
     </div>
   );
 }

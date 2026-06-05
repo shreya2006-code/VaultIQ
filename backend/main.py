@@ -28,7 +28,8 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     db_user = models.User(
         username=user.username,
-        email=user.email
+        email=user.email,
+        password=user.password
     )
 
     db.add(db_user)
@@ -173,3 +174,23 @@ def delete_link(
     db.commit()
 
     return {"message": "Link deleted successfully"}
+
+@app.post("/login")
+def login_user(
+    user: schemas.UserLogin,
+    db: Session = Depends(get_db)
+):
+    db_user = db.query(models.User).filter(
+        models.User.email == user.email
+    ).first()
+
+    if not db_user:
+        return {"message": "User not found"}
+
+    if db_user.password != user.password:
+        return {"message": "Invalid password"}
+
+    return {
+        "message": "Login successful",
+        "username": db_user.username
+    }
