@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Register from "./Register";
+import Login from "./Login";
+
 
 function App() {
+  const username = localStorage.getItem("username");
+
+  const logout = () => {
+    localStorage.removeItem("username");
+    window.location.reload();
+  };
   const [url, setUrl] = useState("");
   const [result, setResult] = useState(null);
   const [links, setLinks] = useState([]);
@@ -53,9 +61,23 @@ function App() {
 
   return (
     <div>
-      <h1>VaultIQ</h1>
+      {username && (
+        <>
+          <h2>
+            Welcome, {username} 👋
+          </h2>
+
+          <button onClick={logout}>
+            Logout
+          </button>
+        </>
+      )}
 
       <Register />
+
+      <hr />
+
+      <Login />
     </div>
   );
 }

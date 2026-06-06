@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
-from backend.database import engine, Base, get_db
-from backend import models, schemas
+from database import engine, Base, get_db
+import models
+import schemas
 
-from backend.ai_service import summarize_link
+from ai_service import summarize_link
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
